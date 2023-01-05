@@ -15,8 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from ninja import NinjaAPI
+from django.http import JsonResponse
+import json
+
+api = NinjaAPI()
+
+@api.get('/opening')
+def get_opening(request, move:str):
+  payload = [{'move' : 'e2e4', 'name':'test.name', 'wdl' : 'testwdl'},{'move' : 'e2e4', 'name':'test.name', 'wdl' : 'testwdl'}]
+  return JsonResponse(payload, safe=False)
+
+  
+    
+
+app_name = 'api'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('api.urls', namespace='api'))
+    path('api/', api.urls),
 ]
