@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.urls import resolve, reverse
 import json
 import unittest
+from api.models import *
 # Create your tests here.
 
 from selenium import webdriver
@@ -25,12 +26,11 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(response.status_code, 200, msg=f'{response.content}')
     data = json.loads(response.content)
 
-    for value in data:
-      self.assertEqual(len(value), 3, msg=f'{data}')
+    self.assertEqual(data['next_move'], ChessOpening.objects.get(move = move).next_move.split(','))
+    self.assertEqual(data['name'], ChessOpening.objects.get(move = move).name)
 
-      self.assertTrue(value['move'])
-      self.assertTrue(value['name'])
-      self.assertTrue(value['wdl'])
+    self.assertEqual(len(data), 2)
+    
 
       
     
