@@ -10,12 +10,18 @@ import csv
 import json
 import pandas as pd
 from .models import ChessOpening
+from stockfish import StockfishException
+
 
 api = NinjaAPI()
 
 @api.get('/opening')
 def get_opening(request, move:str):
-  obj = ChessOpening.objects.get(move =move)
+  try:
+    obj = ChessOpening.objects.get(move =move)
+  except:
+    msg = {'msg' : 'There is no related opening data'}
+    return JsonResponse(msg)
   data = {'next_move':obj.next_move.split(','), 'name' : obj.name}
   return JsonResponse(data) 
 
@@ -56,6 +62,22 @@ def ask_to_stockfish(request, fen:str):
   except:
     msg = {'msg' : 'stockfish load error plz try later'}
     return JsonResponse(msg)
+
+@api.get('/getfen')
+def get_fen_position_by_moves(request, move:str):
+  try:
+    stockfish = get_stock_fish()
+    moves = move.split(',')
+    stockfish.set_position(moves)
+    ans = {'fen': stockfish.get_fen_position()}
+    return JsonResponse(ans)
+  except ValueError:
+    msg = {'msg': 'unvalid move'}
+    return JsonResponse(msg)
+  except StockfishException:
+    msg = {'msg' : 'stockfish load error plz try later'}
+    return JsonResponse(msg)
+
 
   
 

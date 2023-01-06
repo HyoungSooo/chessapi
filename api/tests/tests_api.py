@@ -30,7 +30,15 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(data['name'], ChessOpening.objects.get(move = move).name)
 
     self.assertEqual(len(data), 2)
-    
+  
+  def test_opening_api_has_no_data(self):
+    move = 'e2e4,g7g6'
+    response = self.c.get(f'http://127.0.0.1:8000/api/opening?move={move}')
+
+    data = json.loads(response.content)
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data['msg'], 'There is no related opening data')
 
       
     
