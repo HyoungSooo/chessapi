@@ -20,3 +20,13 @@ def get_stock_fish():
   sf.set_depth(18)
   sf.set_skill_level(20)
   return sf
+
+def eval_position(value):
+    if value >= 400:
+      return 'blunder'
+    elif 400 > value >= 200:
+      return 'mistake'
+    elif 200 > value >= 70:
+      return 'inaccuracy'
+    elif 70 > value:
+      return 'good'
